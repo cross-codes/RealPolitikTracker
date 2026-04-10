@@ -18,7 +18,7 @@ import org.apache.kafka.common.TopicPartition;
 public class EngineNode {
     private static volatile double mu = 1.95;
     private static final double alpha = 0.2;
-    private static final String topic = "auction-results-v2";
+    private static final String topic = "auction-results-v11";
 
     static class ValuationServiceImpl extends ValuationServiceGrpc.ValuationServiceImplBase {
         private final ValuationEngine engine;
@@ -29,7 +29,7 @@ public class EngineNode {
 
         @Override
         public void getMaximumBid(BidRequest request, StreamObserver<BidResponse> responseObserver) {
-            System.out.println("gRPC: Received bid request for: " + request.getPolitician().getName());
+            System.out.println("[gRPC]: Received bid request for: " + request.getPolitician().getName());
 
             PoliticianMsg msg = request.getPolitician();
             Politician p = new Politician(msg.getId(), msg.getName(), msg.getIsIndian(), msg.getIsFemale(),
@@ -63,13 +63,13 @@ public class EngineNode {
         ValuationEngine sharedEngine = new ValuationEngine(budgetA, sizeB, femalesC, volD, indiansE, list);
         sharedEngine.updateExpectedPrices(mu);
 
-        System.out.println("\nEngine initialized. Starting network services...");
+        System.out.println("\n[Engine] initialized. Starting network service...");
         Server server = ServerBuilder.forPort(9090)
                 .addService(new ValuationServiceImpl(sharedEngine))
                 .build()
                 .start();
 
-        System.out.println("gRPC Server started, listening on 9090");
+        System.out.println("[gRPC] Server started, listening on 9090");
         Thread kafkaThread = new Thread(() -> {
             try {
                 Properties constProps = new Properties();
@@ -84,14 +84,12 @@ public class EngineNode {
                 KafkaConsumer<String, byte[]> consumer = new KafkaConsumer<>(constProps);
                 TopicPartition partition0 = new TopicPartition(topic, 0);
                 consumer.assign(Collections.singletonList(partition0));
-                // consumer.seekToBeginning(Collections.singletonList(partition0));
+                consumer.seekToBeginning(Collections.singletonList(partition0));
 
-                System.out.println("[KAFKA THREAD] Force-assigned to partition 0.");
-
-                int loopCount = 0;
+                int cnt = 0;
                 while (true) {
-                    loopCount++;
-                    if (loopCount % 50 == 0) {
+                    cnt += 1;
+                    if (cnt % 50 == 0) {
                         System.out.println("[KAFKA THREAD] Polling...");
                     }
 
@@ -103,7 +101,7 @@ public class EngineNode {
 
                     for (ConsumerRecord<String, byte[]> record : records) {
                         try {
-                            System.out.println("[KAFKA THREAD] Processing record from partition " + record.partition() + " at offset " + record.offset());
+                            System.out.println("[KAFKA THREAD] Processing record at offset " + record.offset());
 
                             AuctionResultEvent event = AuctionResultEvent.parseFrom(record.value());
                             PoliticianMsg msg = event.getPolitician();
@@ -114,11 +112,16 @@ public class EngineNode {
                                     msg.getVolatilityIndex(), msg.getSpectrum(), msg.getTotal(), msg.getBasePrice());
 
                             sharedEngine.recordAuctionResult(p, event.getWasBought(), event.getSoldPrice());
-                            if (event.getWasBought()) {
+
+                            if (event.getSoldPrice() > 0) {
+                                System.out.printf("OLD EMA: %.2f\n", mu);
                                 double M = (double) event.getSoldPrice() / p.basePrice;
+                                System.out.printf("M: %.2f\n", M);
                                 mu = (alpha * M) + ((1 - alpha) * mu);
-                                System.out.printf("Engine EMA updated to: %.2fx\n\n", mu);
+                                System.out.printf("--> Engine EMA updated to: %.2fx\n\n", mu);
                                 sharedEngine.updateExpectedPrices(mu);
+                            } else {
+                                System.out.println("--> Politician went unsold. EMA remains: " + String.format("%.2fx", mu) + "\n");
                             }
                         } catch (Exception e) {
                             System.err.println("[KAFKA THREAD] ERROR processing specific record: " + e.getMessage());
