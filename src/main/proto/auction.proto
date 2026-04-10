@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package com.github.evermore;
+
+option java_package = "com.github.evermore.proto";
+option java_multiple_files = true;
+
+message PoliticianMsg {
+  int32 id = 1;
+  string name = 2;
+  bool is_indian = 3;
+  bool is_female = 4;
+  int32 volatility_index = 5;
+  int32 spectrum = 6;
+  int32 total = 7;
+  int32 base_price = 8;
+}
+
+message BidRequest {
+  string request_id = 1;
+  PoliticianMsg politician = 2;
+  bool param1 = 3;
+  int32 param2 = 4;
+  bool param3 = 5;
+  double param4 = 6;
+}
+
+message BidResponse {
+  string request_id = 1;
+  int32 max_bid = 2;
+}
+
+message AuctionResultEvent {
+  PoliticianMsg politician = 1;
+  bool was_bought = 2;
+  int32 sold_price = 3;
+}
+
+service ValuationService {
+  rpc GetMaximumBid (BidRequest) returns (BidResponse);
+}
