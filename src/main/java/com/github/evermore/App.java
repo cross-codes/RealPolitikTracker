@@ -26,6 +26,10 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
@@ -33,7 +37,7 @@ import java.util.UUID;
 
 public class App extends Application {
 
-    private static final String topic = "auction-results-v5";
+    private static final String topic = "auction-results-v9";
     private ManagedChannel grpcChannel;
     private ValuationServiceGrpc.ValuationServiceBlockingStub engineStub;
     private KafkaProducer<String, byte[]> kafkaProducer;
@@ -49,9 +53,7 @@ public class App extends Application {
     private CheckBox cbVolBuffer, cbPriceBuffer;
     private TextField tfVolBuffer, tfPriceBuffer;
 
-    // Spend Projection Labels
     private Label avglabel1, avglabel2, avglabel3, avglabel4;
-    // Volatility Projection Labels
     private Label avgVolLabel1, avgVolLabel2, avgVolLabel3, avgVolLabel4;
 
     private Label poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel;
@@ -118,10 +120,7 @@ public class App extends Application {
 
         engineConfigBox.getChildren().addAll(volBox, priceBox);
 
-        // --- PROJECTION STATS STYLING ---
         String projRowStyle = "-fx-font-size: 12px;";
-
-        // --- VOLATILITY PROJECTION BOX ---
         VBox volProjectionBox = new VBox(5);
         volProjectionBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -140,7 +139,6 @@ public class App extends Application {
 
         volProjectionBox.getChildren().addAll(volProjTitle, avgVolLabel1, avgVolLabel2, avgVolLabel3, avgVolLabel4);
 
-        // --- SPEND PROJECTION BOX ---
         VBox projectionBox = new VBox(5);
         projectionBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -159,7 +157,6 @@ public class App extends Application {
 
         projectionBox.getChildren().addAll(projTitle, avglabel1, avglabel2, avglabel3, avglabel4);
 
-        // --- POOL STATS BOX ---
         VBox poolStatsBox = new VBox(5);
         poolStatsBox.setAlignment(Pos.CENTER_LEFT);
         Label poolStatsTitle = new Label("Remaining Pool:");
@@ -177,8 +174,6 @@ public class App extends Application {
         poolIndiansLabel.setStyle(poolStatStyle);
 
         poolStatsBox.getChildren().addAll(poolStatsTitle, poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel);
-
-        // Initialize the stats
         updatePoolStats();
         updateStats();
 
@@ -187,7 +182,6 @@ public class App extends Application {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Volatility projection added to the left of the spend projection
         headerRow.getChildren().addAll(statsBox, spacer, engineConfigBox, new Separator(Orientation.VERTICAL), poolStatsBox, new Separator(Orientation.VERTICAL), volProjectionBox, new Separator(Orientation.VERTICAL), projectionBox);
 
         TextField searchField = new TextField();
@@ -298,6 +292,18 @@ public class App extends Application {
         Scene scene = new Scene(root, 1200, 800);
         stage.setTitle("Auction dashboard");
         stage.setScene(scene);
+
+        stage.setOnCloseRequest(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close the auction dashboard? It is difficult to recover the auction state", ButtonType.YES, ButtonType.NO);
+            alert.setHeaderText("Confirm Exit");
+            alert.setTitle("Exit");
+            alert.showAndWait().ifPresent(response -> {
+                if (response != ButtonType.YES) {
+                    event.consume();
+                }
+            });
+        });
+
         stage.show();
     }
 
@@ -362,14 +368,12 @@ public class App extends Application {
         fLabel.setStyle(curFemales >= femalesC ? greenStyle : redStyle);
         iLabel.setStyle(curIndians >= indiansE ? greenStyle : redStyle);
 
-        // Update Spend Projections
         int budgetLeft = budgetA - curSpent;
         updateProjectionLabel(avglabel1, sizeB, curSize, budgetLeft);
         updateProjectionLabel(avglabel2, sizeB + 1, curSize, budgetLeft);
         updateProjectionLabel(avglabel3, sizeB + 2, curSize, budgetLeft);
         updateProjectionLabel(avglabel4, sizeB + 3, curSize, budgetLeft);
 
-        // Update Volatility Projections
         int volLeft = volD - curVol;
         updateProjectionLabel(avgVolLabel1, sizeB, curSize, volLeft);
         updateProjectionLabel(avgVolLabel2, sizeB + 1, curSize, volLeft);
@@ -377,7 +381,6 @@ public class App extends Application {
         updateProjectionLabel(avgVolLabel4, sizeB + 3, curSize, volLeft);
     }
 
-    // Renamed resourceLeft to make it clear this handles both budget and volatility math
     private void updateProjectionLabel(Label lbl, int targetSize, int curSize, int resourceLeft) {
         if (curSize >= targetSize) {
             lbl.setText(String.format("Size %d: Met", targetSize));
@@ -499,21 +502,22 @@ public class App extends Application {
         submitBtn.setOnAction(_ -> {
             try {
                 int soldPrice = Integer.parseInt(priceField.getText().trim());
-                boolean weBoughtIt = rbWeBought.isSelected();
-                broadcastAuctionResult(politician, weBoughtIt, soldPrice);
+                boolean bought = rbWeBought.isSelected();
+                broadcastAuctionResult(politician, bought, soldPrice);
 
-                if (weBoughtIt) {
+                if (bought) {
                     politician.basePrice = soldPrice;
                 }
 
                 pool.removeIf(p -> p.ID == politician.ID);
                 polPool.removeIf(p -> p.ID == politician.ID);
 
-                if (weBoughtIt) {
+                if (bought) {
                     currTeamData.add(politician);
+                    addToFile(politician);
                 }
 
-                updatePoolStats(); // Update the pool stats after someone is removed
+                updatePoolStats();
 
                 dialog.close();
 
@@ -529,6 +533,34 @@ public class App extends Application {
         Scene scene = new Scene(layout, 400, 480);
         dialog.setScene(scene);
         dialog.showAndWait();
+    }
+
+    private void addToFile(Politician p) {
+        File csvFile = new File("bought_roster.csv");
+        boolean isNewFile = !csvFile.exists();
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(csvFile, true))) {
+            if (isNewFile) {
+                pw.println("Sl. No.,Leaders,Nationaity,Gender,Mass Appeal,Political Tact,Volitality Index,Spectrum,Total,Base Price");
+            }
+            String nationality = p.isIndian ? "Indian" : "Overseas";
+            String gender = p.isFemale ? "Female" : "Male";
+
+            pw.printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s%n",
+                    p.ID,
+                    p.name,
+                    nationality,
+                    gender,
+                    "N/A",
+                    "N/A",
+                    p.volatilityIndex,
+                    p.spectrum,
+                    p.total,
+                    p.basePrice
+            );
+        } catch (IOException e) {
+            System.err.println("Failed to save politician to CSV: " + e.getMessage());
+        }
     }
 
     private void broadcastAuctionResult(Politician p, boolean bought, int soldPrice) {
