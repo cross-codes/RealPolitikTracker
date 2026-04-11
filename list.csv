@@ -1,161 +1,151 @@
 Sl. No.,Leaders,Nationaity,Gender,Mass Appeal,Political Tact,Volitality Index,Spectrum,Total,Base Price
-37,Jacinda Ardern,F,F,8,8,1,-1,16,100
-1,BR Ambedkar,I,M,8,8,1,-1,16,100
+1,BR Ambedkar,I,M,8,8,2,-1,16,100
 2,Martin Luther King Jr,F,M,9,9,1,-1,18,120
+3,Nigel Farage,F,M,4,6,3,1,10,60
 4,Lal Bahadur Shastri,I,M,8,6,1,-1,14,80
-19,Rajnath Singh,I,M,5,5,1,1,10,60
-81,Anthony Albanese,F,M,6,6,1,-1,12,60
-93,Manmohan Singh,I,M,6,5,1,-1,11,60
-141,Abraham Lincoln,F,M,10,9,1,1,19,120
-153,Nelson Mandela,F,M,10,7,1,-1,17,100
-23,Angela Merkel,F,F,5,5,2,-1,10,60
-77,Sushma Swaraj,I,F,5,5,2,1,10,60
-134,Benazir Bhutto,F,F,4,5,2,-1,9,50
-9,Naveen Patanaik,I,M,4,5,2,-1,9,50
-12,Sardar Vallabhai Patel,I,M,8,8,2,1,16,100
-24,S Jaishankar,I,M,6,6,2,1,12,80
-25,Manohar Lal Khattar,I,M,5,5,2,1,10,60
-46,Lula Da Silva,F,M,6,7,2,-1,13,60
-51,Atal Bihari Vajpayee,I,M,8,8,2,1,16,100
-61,Olaf Scholz,F,M,6,6,2,1,12,60
-62,Shashi Tharoor,I,M,8,7,2,-1,15,80
-63,Rishi Sunak,F,M,6,6,2,1,12,80
-64,Jayaprakash Narayan,I,M,8,7,2,1,15,80
-73,Neville Chamberlain,F,M,4,4,2,1,8,40
-83,Theodore Roosevelt,F,M,7,8,2,1,15,80
-89,PV Narsimha Rao,I,M,5,5,2,1,10,60
-119,Mahatma Gandhi,I,M,10,10,2,-1,20,120
-154,Nitin Gadkari,I,M,8,7,2,1,15,80
-159,Ashwini Vaishnaw,I,M,5,6,2,1,11,60
-10,Tulsi Gabbard,F,F,4,4,3,1,8,50
-31,Tsai Ing-wen,F,F,7,6,3,1,13,80
-47,Kamala Harris,F,F,6,6,3,-1,12,60
-114,Sonia Gandhi,I,F,7,5,3,-1,12,80
-127,Jayalalitha,I,F,6,6,3,-1,12,60
-3,NT Rama Rao,I,M,5,5,3,1,10,50
-7,Kapil Sibal,I,M,3,3,3,-1,6,30
-13,Ashok Gehlot,I,M,5,6,3,-1,11,60
-26,YS Jagan Mohan Reddy,I,M,5,6,3,-1,11,60
-33,Dwight D. Eisenhower,F,M,8,8,3,1,16,100
-34,Pierre Poilievre,F,M,7,5,3,1,12,80
-39,N. Chandrababu Naidu,I,M,6,6,3,-1,12,60
-40,H.D. Deve Gowda,I,M,6,5,3,-1,11,60
-43,Sharad Pawar,I,M,4,8,3,1,12,60
-45,Mustafa Kemal Ataturk,F,M,8,7,3,1,15,80
-52,Jairam Ramesh,I,M,4,4,3,-1,8,40
-59,Ramdas Athawale,I,M,5,6,3,1,11,60
-65,Mahmoud Abbas Abu Maze,F,M,5,5,3,-1,10,60
-75,HD Kumarswamy,I,M,6,5,3,-1,11,60
-76,G. Kishan Reddy,I,M,3,3,3,1,6,30
-82,Joseph Broz Tito,F,M,6,8,3,-1,14,80
-104,Vilasrao Deshmukh,I,M,5,5,3,-1,10,60
-106,Rahul Gandhi,I,M,7,5,3,-1,12,60
-108,Arun Jaitley,I,M,6,7,3,1,13,80
-110,P Chidambram,I,M,6,6,3,-1,12,60
-116,Keir Starmer,F,M,6,5,3,-1,11,60
-117,Fredrich Engels,F,M,7,7,3,-1,14,80
-123,Nitish Kumar,I,M,4,5,3,1,9,50
-126,Uddhav Thackeray,I,M,4,4,3,1,8,50
-130,Hemanta Biswa Sarma,I,M,6,6,3,1,12,60
-137,Rajiv Gandhi,I,M,6,3,3,-1,9,60
-151,George Washington,F,M,9,6,3,1,15,80
-156,Karunanidhi,I,M,4,4,3,1,8,40
-157,K Annamalai,I,M,5,5,3,1,10,50
-29,Nirmala Sitharaman,I,F,3,3,4,1,6,30
-56,Liz Truss,F,F,1,2,4,1,3,30
-87,Claudia Sheinbaum,F,F,7,6,4,-1,13,80
-132,Mayawati,I,F,4,4,4,1,8,50
-5,Madhavrao Scindia,I,M,6,5,4,-1,11,60
-8,Amit Shah,I,M,7,7,4,1,14,80
-21,Fumio Kishida,F,M,5,5,4,1,10,60
-27,VP Singh,I,M,5,5,4,1,10,50
-32,Lalu Prasad Yadav,I,M,5,6,4,-1,11,60
-38,Deng Xiaoping,F,M,8,8,4,-1,16,100
-53,Yasser Arafat,F,M,7,6,4,-1,13,80
-66,Arvind Kejriwal,I,M,6,5,4,-1,11,60
-68,K Chandrashekar Rao,I,M,7,5,4,-1,12,60
-70,Barack Obama,F,M,8,7,4,-1,15,80
-72,Shinzo Abe,F,M,8,7,4,1,15,100
-74,Jawaharlal Nehru,I,M,9,6,4,-1,15,100
-78,Tejaswi Surya,I,M,7,8,4,1,15,80
-80,Bill Clinton,F,M,7,6,4,-1,13,80
-84,Joe Biden,F,M,7,7,4,-1,14,80
-94,Anurag Singh Thakur,I,M,3,3,4,1,6,30
-97,Bhagwant Mann,I,M,5,5,4,-1,10,60
-100,Park Chung-hee,F,M,7,7,4,1,14,80
-102,Mallikarjun Khadage,I,M,5,6,4,-1,11,60
-109,Shivraj Singh Chauhan,I,M,6,6,4,1,12,60
-111,MK Stalin,I,M,5,5,4,-1,10,60
-112,B. S. Yediyurappa,I,M,5,4,4,1,9,50
-113,Eknath Shinde,I,M,5,6,4,1,11,60
-124,John F. Kennedy,F,M,8,8,4,1,16,100
-135,Jyotiraditya Scindia,I,M,5,4,4,1,9,40
-148,Boris Johnson,F,M,5,5,4,1,10,60
-155,Karl Marx,F,M,8,8,4,-1,16,100
-17,Mamata Bannerjee,I,F,5,6,5,-1,11,60
-58,Mehbooba Mufti,I,F,6,4,5,-1,10,60
-69,Giorgia Meloni,F,F,7,5,5,1,12,80
-95,Theresa May,F,F,6,6,5,-1,12,60
-101,Margaret Thatcher,F,F,8,8,5,1,16,100
-103,Aung San Suu Kyi,F,F,4,5,5,-1,9,50
-143,Marine Le Pen,F,F,7,7,5,1,14,80
+5,Ajit Pawar,I,M,4,5,5,1,9,40
+6,Hirohito,F,M,8,4,4,1,12,60
+7,Raghav chadha,I,M,3,6,3,-1,9,30
+8,Amit Shah,I,M,6,8,4,1,14,80
+9,JD Vance,F,M,4,4,3,1,8,50
+10,Droupadi Murmu,I,F,2,3,2,1,5,40
 11,Nikita Khruschev,F,M,7,7,5,-1,14,80
-14,Asaduddin Owaisi,I,M,5,5,5,-1,10,50
-15,Mohan Bhagwat,I,M,7,7,5,1,14,80
-20,Otto von Bismarck,F,M,9,9,5,1,18,120
-30,Narenda Modi,I,M,9,8,5,1,17,120
-48,Xi Jinping,F,M,8,8,5,-1,16,100
-49,Yogi Adityanath,I,M,8,8,5,1,16,100
-50,Mohamed Muizzu,F,M,5,4,5,-1,9,40
-54,Pinarayi Vijayan,I,M,7,6,5,-1,13,80
-55,Donald Trump,F,M,7,5,5,1,12,80
-67,Richard Nixon,F,M,7,8,5,1,15,80
-79,Jair Bolsonaro,F,M,5,6,5,1,11,60
-86,Ayatollah Khomeini,F,M,8,7,5,1,15,80
-105,Justin Trudeau,F,M,4,4,5,-1,8,40
-107,Imran Khan,F,M,6,4,5,-1,10,50
-115,Shehbaz Sharif,F,M,5,5,5,1,10,50
-118,Min Aung Hlaing,F,M,5,5,5,1,10,60
-120,Jyoti Basu,I,M,6,6,5,-1,12,60
-128,N Biren Singh,I,M,4,4,5,1,8,40
-129,Emmanuel Macron,F,M,6,5,5,-1,11,60
-136,Subhash Chandra Bose,I,M,9,9,5,1,18,120
-138,Farooq Abdullah,I,M,6,6,5,-1,12,60
-139,Sitaram Yechuri,I,M,5,4,5,-1,9,50
-142,Prof. Mohd Yunus,F,M,7,7,5,-1,14,80
-146,Ronald Reagan,F,M,7,8,5,1,15,100
-149,Franklin Delano Roosevelt,F,M,10,8,5,1,18,100
-150,Recep Tayyip Erdoğan,F,M,7,6,5,1,13,80
-152,Mohammad Bin Salman,F,M,6,7,5,1,13,60
-160,L K Advani,I,M,7,7,5,1,14,80
-71,Indira Gandhi,I,F,9,8,6,1,17,120
-6,Hirohito,F,M,5,6,6,1,11,60
-16,Volodymyr Zelensky,F,M,7,7,6,-1,14,80
+12,Sardar Vallabhai Patel,I,M,9,7,2,1,16,100
+13,Ashok Gehlot,I,M,5,5,4,-1,10,60
+14,Asaduddin Owaisi,I,M,6,4,5,1,10,60
+15,Mohan Bhagwat,I,M,6,4,5,1,10,80
+16,Volodymyr Zelensky,F,M,7,7,6,-1,14,60
+17,Mamata Bannerjee,I,F,5,6,7,-1,11,60
 18,Ho Chi Minh,F,M,8,8,6,-1,16,100
-22,Mohammad Ali Jinnah,F,M,9,6,6,1,15,80
-28,Vladimir Putin,F,M,8,9,6,1,17,100
-35,Francisco Franco,F,M,7,7,6,1,14,80
+19,Rajnath Singh,I,M,4,5,1,1,9,60
+20,Otto von Bismarck,F,M,9,9,6,1,18,120
+21,Sanae Takaichi,F,F,5,5,4,1,10,60
+22,Mohammad Ali Jinnah,F,M,9,6,7,1,15,80
+23,Smriti Irani,I,F,1,5,2,1,6,30
+24,S Jaishankar,I,M,5,8,2,1,13,80
+25,Manohar Lal Khattar,I,M,5,5,2,1,10,60
+26,A. P. J. Abdul Kalam,I,M,9,2,1,1,11,40
+27,Morarji Desai,I,M,5,2,6,1,7,40
+28,Vladimir Putin,F,M,9,6,5,1,15,100
+29,Nirmala Sitharaman,I,F,4,3,3,1,7,50
+30,Narenda Modi,I,M,9,8,5,1,17,120
+31,Rekha Gupta,I,F,1,3,3,1,4,30
+32,Lalu Prasad Yadav,I,M,5,5,4,-1,10,60
+33,Dwight D. Eisenhower,F,M,8,8,3,1,16,100
+34,Charles De Gaulle,F,M,8,8,3,1,16,100
+35,Francisco Franco,F,M,7,7,5,1,14,80
 36,Pervez Musharraf,F,M,6,6,6,1,12,60
-44,Leonid Brezhnev,F,M,7,7,6,-1,14,80
-60,Che Guevera,F,M,8,7,6,-1,15,80
-85,George Bush,F,M,4,4,6,1,8,40
-91,Benjamin Netanyahu,F,M,8,8,6,1,16,100
-92,Yahya Khan,F,M,4,5,6,1,9,40
-96,Abdel Nasser,F,M,7,5,6,1,12,60
-98,Zia ul Haq,F,M,6,4,6,1,10,60
-99,Winston Churchill,F,M,9,8,6,1,17,100
-144,Mikhail Gorbachev,F,M,6,5,6,1,11,60
-145,Suharto,F,M,6,5,6,1,11,60
-147,Nicolas Maduro,F,M,4,6,6,-1,10,60
-158,Bashar al-Assad,F,M,3,5,6,-1,8,40
-41,Muammar Gaddafi,F,M,8,8,7,1,16,100
+37,Balendra Shah,F,M,4,4,2,1,8,60
+38,Deng Xiaoping,F,M,8,8,4,-1,16,100
+39,N. Chandrababu Naidu,I,M,6,6,3,-1,12,60
+40,Hardeep Puri,I,M,3,5,3,1,8,60
+41,Muammar Gaddafi,F,M,8,6,7,-1,14,100
 42,Benito Mussolini,F,M,8,5,7,1,13,60
+43,Sharad Pawar,I,M,4,8,1,1,12,60
+44,Elizabeth II,F,F,8,4,4,1,12,60
+45,Mustafa Kemal Ataturk,F,M,8,7,3,1,15,80
+46,Lula Da Silva,F,M,6,7,2,-1,13,60
+47,Kamala Harris,F,F,6,4,3,-1,10,60
+48,Xi Jinping,F,M,8,8,5,-1,16,100
+49,Yogi Adityanath,I,M,6,8,5,1,14,100
+50,Mohamed Muizzu,F,M,4,4,5,-1,8,40
+51,Atal Bihari Vajpayee,I,M,8,8,2,1,16,100
+52,Revanth Reddy,I,M,7,6,3,-1,13,80
+53,Yasser Arafat,F,M,7,4,4,-1,11,80
+54,Pinarayi Vijayan,I,M,7,6,5,-1,13,80
+55,Donald Trump,F,M,7,5,8,1,12,80
+56,Ursula von der Leyen,F,F,5,6,4,-1,11,80
 57,Vladimir Lenin,F,M,8,9,7,-1,17,100
-121,Fidel Castro,F,M,8,8,7,-1,16,100
-122,Chiang Kai-shek,F,M,7,8,7,1,15,80
-133,Hideki Tojo,F,M,6,7,7,1,13,60
-140,Saddam Hussein,F,M,7,7,7,1,14,80
-88,Mao Zedong,F,M,10,8,8,-1,18,120
-90,Joseph Stalin,F,M,9,8,8,1,17,100
-131,Kim Jong Un,F,M,7,4,8,1,11,60
-125,Adolf Hitler,F,M,10,10,9,1,20,120
+58,Omar Abdullah,I,M,6,4,5,-1,10,60
+59,Shehzad Poonawalla,I,M,4,3,2,1,7,40
+60,Che Guevera,F,M,8,7,6,-1,15,80
+61,Friedrich Merz,F,M,6,6,2,1,12,60
+62,Shashi Tharoor,I,M,8,7,2,-1,15,80
+63,Rishi Sunak,F,M,4,6,2,1,10,80
+64,Jayaprakash Narayan,I,M,8,7,2,1,15,80
+65,Yevgeny Prigozhin,F,M,7,2,6,1,9,60
+66,Arvind Kejriwal,I,M,5,5,4,-1,10,60
+67,Richard Nixon,F,M,7,8,5,1,15,80
+68,K Chandrashekar Rao,I,M,7,5,4,-1,12,80
+69,Giorgia Meloni,F,F,7,5,3,1,12,80
+70,Barack Obama,F,M,8,7,4,-1,15,80
+71,Indira Gandhi,I,F,9,8,6,-1,17,120
+72,Shinzo Abe,F,M,8,7,4,1,15,100
+73,Rasputin,F,M,3,2,8,1,5,40
+74,Jawaharlal Nehru,I,M,9,6,4,-1,15,100
+75,Prashant Kishor,I,M,1,8,2,-1,9,40
+76,Akhilesh Yadav,I,M,3,3,3,-1,6,30
+77,Priyanka Gandhi,I,F,4,5,2,-1,9,60
+78,Mark Carney,F,M,6,5,4,1,11,60
+79,Bill Clinton,F,M,7,6,4,-1,13,80
+80,Anthony Albanese,F,M,6,8,1,-1,14,60
+81,Joseph Broz Tito,F,M,6,8,3,-1,14,80
+82,Theodore Roosevelt,F,M,7,8,2,1,15,80
+83,Joe Biden,F,M,7,7,4,-1,14,80
+84,George Bush,F,M,4,4,6,1,8,40
+85,Ayatollah Khomeini,F,M,8,7,5,1,15,80
+86,Claudia Sheinbaum,F,F,7,6,4,-1,13,80
+87,Mao Zedong,F,M,10,8,8,-1,18,120
+88,PV Narsimha Rao,I,M,5,5,2,1,10,60
+89,Joseph Stalin,F,M,9,8,8,-1,17,100
+90,Benjamin Netanyahu,F,M,8,8,6,1,16,100
+91,Marco Rubio,F,M,4,5,6,1,9,40
+92,Manmohan Singh,I,M,6,5,1,-1,11,60
+93,Lee Kuan Yew,F,M,5,4,5,1,9,60
+94,Abdel Nasser,F,M,7,5,6,1,12,60
+95,Bhagwant Mann,I,M,4,5,4,-1,9,60
+96,Zia ul Haq,F,M,6,4,6,1,10,60
+97,Winston Churchill,F,M,9,8,6,1,17,100
+98,Margaret Thatcher,F,F,8,8,5,1,16,100
+99,Mallikarjun Kharge,I,M,5,6,4,-1,11,60
+100,Sheikh Hasina,F,F,6,4,5,1,10,60
+101,Henry Kissinger,F,M,3,10,1,1,13,100
+102,Justin Trudeau,F,M,4,4,5,-1,8,40
+103,Rahul Gandhi,I,M,7,5,3,-1,12,60
+104,Imran Khan,F,M,6,4,5,-1,10,50
+105,Devendra Fadnavis,I,M,6,7,5,1,13,80
+106,Shivraj Singh Chauhan,I,M,6,6,4,1,12,60
+107,MK Stalin,I,M,5,5,4,-1,10,60
+108,Eknath Shinde,I,M,5,6,7,1,11,80
+109,Sonia Gandhi,I,F,7,5,3,-1,12,60
+110,Shehbaz Sharif,F,M,5,5,5,1,10,60
+111,Keir Starmer,F,M,6,5,3,-1,11,70
+112,Min Aung Hlaing,F,M,5,5,5,1,10,60
+113,Mahatma Gandhi,I,M,10,7,3,-1,17,120
+114,Cyril Ramaphosa,F,M,6,5,5,-1,11,60
+115,Fidel Castro,F,M,8,8,7,-1,16,100
+116,Chiang Kai-shek,F,M,7,8,7,1,15,80
+117,Nitish Kumar,I,M,4,5,4,1,9,30
+118,John F. Kennedy,F,M,8,8,4,1,16,100
+119,Adolf Hitler,F,M,9,10,9,1,19,120
+120,Uddhav Thackeray,I,M,4,4,3,1,8,50
+121,Jayalalitha,I,F,6,6,3,1,12,60
+122,Kangana Ranaut,I,F,2,2,2,1,4,60
+123,Emmanuel Macron,F,M,6,5,5,-1,11,60
+124,Hemanta Biswa Sarma,I,M,6,5,3,1,11,60
+125,Kim Jong Un,F,M,10,4,10,1,14,60
+126,Mayawati,I,F,4,4,4,1,8,50
+127,Hideki Tojo,F,M,6,7,7,1,13,60
+128,Benazir Bhutto,F,F,4,5,2,-1,9,50
+129,Subhash Chandra Bose,I,M,9,9,5,-1,18,120
+130,Rajiv Gandhi,I,M,6,3,3,-1,9,60
+131,Farooq Abdullah,I,M,6,6,5,-1,12,60
+132,Sitaram Yechuri,I,M,5,4,5,-1,9,50
+133,Saddam Hussein,F,M,7,7,7,1,14,80
+134,Abraham Lincoln,F,M,10,9,1,-1,19,120
+135,Marine Le Pen,F,F,7,7,5,1,14,80
+136,Mikhail Gorbachev,F,M,6,5,6,1,11,60
+137,Ronald Reagan,F,M,7,8,5,1,15,100
+138,Nicolas Maduro,F,M,4,6,6,-1,10,60
+139,Javier Milei,F,M,7,6,3,1,13,80
+140,Franklin Delano Roosevelt,F,M,10,10,4,-1,20,100
+141,Recep Tayyip Erdoğan,F,M,7,6,5,1,13,80
+142,George Washington,F,M,9,6,3,1,15,80
+143,Mohammad Bin Salman,F,M,6,7,5,1,13,60
+144,Nelson Mandela,F,M,10,7,1,-1,17,100
+145,Nitin Gadkari,I,M,8,7,2,1,15,80
+146,Karl Marx,F,M,8,5,6,-1,13,100
+147,Zohran Mamdani,F,M,6,5,3,-1,11,60
+148,Bashar al-Assad,F,M,3,5,6,-1,8,40
+149,Ashwini Vaishnaw,I,M,5,6,2,1,11,60
+150,L K Advani,I,M,7,7,5,1,14,80

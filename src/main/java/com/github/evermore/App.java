@@ -37,7 +37,7 @@ import java.util.UUID;
 
 public class App extends Application {
 
-    private static final String topic = "auction-results-v10";
+    private static final String topic = "final-auction-run-v2";
     private ManagedChannel grpcChannel;
     private ValuationServiceGrpc.ValuationServiceBlockingStub engineStub;
     private KafkaProducer<String, byte[]> kafkaProducer;
