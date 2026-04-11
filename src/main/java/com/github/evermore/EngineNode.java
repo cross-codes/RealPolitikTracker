@@ -13,12 +13,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+
 import org.apache.kafka.common.TopicPartition;
 
 public class EngineNode {
     private static volatile double mu = 1.95;
     private static final double alpha = 0.2;
-    private static final String topic = "auction-results-v17";
+    private static final String topic = "auction-results-v19";
 
     static class ValuationServiceImpl extends ValuationServiceGrpc.ValuationServiceImplBase {
         private final ValuationEngine engine;
@@ -29,17 +30,13 @@ public class EngineNode {
 
         @Override
         public void getMaximumBid(BidRequest request, StreamObserver<BidResponse> responseObserver) {
-            System.out.println("[gRPC]: Received bid request for: " + request.getPolitician().getName());
+            IO.println("[gRPC]: Received bid request for: " + request.getPolitician().getName());
 
             PoliticianMsg msg = request.getPolitician();
-            Politician p = new Politician(msg.getId(), msg.getName(), msg.getIsIndian(), msg.getIsFemale(),
-                    msg.getVolatilityIndex(), msg.getSpectrum(), msg.getTotal(), msg.getBasePrice());
+            Politician p = new Politician(msg.getId(), msg.getName(), msg.getIsIndian(), msg.getIsFemale(), msg.getVolatilityIndex(), msg.getSpectrum(), msg.getTotal(), msg.getBasePrice());
 
             int mxBid = this.engine.getMaximumBid(p, request.getParam1(), request.getParam2(), request.getParam3(), request.getParam4());
-            BidResponse response = BidResponse.newBuilder()
-                    .setRequestId(request.getRequestId())
-                    .setMaxBid(mxBid)
-                    .build();
+            BidResponse response = BidResponse.newBuilder().setRequestId(request.getRequestId()).setMaxBid(mxBid).build();
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();
@@ -64,10 +61,7 @@ public class EngineNode {
         sharedEngine.updateExpectedPrices(mu);
 
         System.out.println("\n[Engine] initialized. Starting network service...");
-        Server server = ServerBuilder.forPort(9090)
-                .addService(new ValuationServiceImpl(sharedEngine))
-                .build()
-                .start();
+        Server server = ServerBuilder.forPort(9090).addService(new ValuationServiceImpl(sharedEngine)).build().start();
 
         System.out.println("[gRPC] Server started, listening on 9090");
         Thread kafkaThread = new Thread(() -> {
@@ -89,14 +83,14 @@ public class EngineNode {
                 int cnt = 0;
                 while (true) {
                     cnt += 1;
-                    if (cnt % 50 == 0) {
-                        System.out.println("[KAFKA THREAD] Polling...");
+                    if (cnt % 500 == 0) {
+                        IO.println("[KAFKA THREAD] Alive and polling...");
                     }
 
                     ConsumerRecords<String, byte[]> records = consumer.poll(Duration.ofMillis(100));
 
                     if (!records.isEmpty()) {
-                        System.out.println("\n[KAFKA THREAD] Found " + records.count() + " records");
+                        IO.println("\n[KAFKA THREAD] Found " + records.count() + " records");
                     }
 
                     for (ConsumerRecord<String, byte[]> record : records) {
@@ -106,22 +100,29 @@ public class EngineNode {
                             AuctionResultEvent event = AuctionResultEvent.parseFrom(record.value());
                             PoliticianMsg msg = event.getPolitician();
 
-                            System.out.println("[KAFKA THREAD] SUCCESS: Parsed result for " + msg.getName());
+                            IO.println("[KAFKA THREAD] SUCCESS: Parsed auction result for " + msg.getName());
 
-                            Politician p = new Politician(msg.getId(), msg.getName(), msg.getIsIndian(), msg.getIsFemale(),
-                                    msg.getVolatilityIndex(), msg.getSpectrum(), msg.getTotal(), msg.getBasePrice());
+                            Politician p = new Politician(msg.getId(), msg.getName(), msg.getIsIndian(), msg.getIsFemale(), msg.getVolatilityIndex(), msg.getSpectrum(), msg.getTotal(), msg.getBasePrice());
 
                             sharedEngine.recordAuctionResult(p, event.getWasBought(), event.getSoldPrice());
+                            IO.println("[KAFKA THREAD] INFO: Politician " + msg.getName() + " processed");
+                            IO.println("[KAFKA THREAD] INFO: Was bought?: " + event.getWasBought() + " Sold at: " + event.getSoldPrice());
 
+                            IO.println("Remaining statistics:");
+                            IO.println("Budget remaining: " + sharedEngine.ARem);
+                            IO.println("Required amount of teammates: " + sharedEngine.BRem);
+                            IO.println("Required number of females: " + sharedEngine.CRem);
+                            IO.println("Leftover volatility: " + sharedEngine.DRem);
+                            IO.println("Required number of indians: " + sharedEngine.ERem);
                             if (event.getSoldPrice() > 0) {
                                 System.out.printf("OLD EMA: %.2f\n", mu);
                                 double M = (double) event.getSoldPrice() / p.basePrice;
                                 System.out.printf("M: %.2f\n", M);
                                 mu = (alpha * M) + ((1 - alpha) * mu);
-                                System.out.printf("--> Engine EMA updated to: %.2fx\n\n", mu);
+                                System.out.printf("EMA updated to: %.2fx\n", mu);
                                 sharedEngine.updateExpectedPrices(mu);
                             } else {
-                                System.out.println("--> Politician went unsold. EMA remains: " + String.format("%.2fx", mu) + "\n");
+                                IO.println("EMA remains: " + String.format("%.2fx", mu) + "\n");
                             }
                         } catch (Exception e) {
                             System.err.println("[KAFKA THREAD] ERROR processing specific record: " + e.getMessage());

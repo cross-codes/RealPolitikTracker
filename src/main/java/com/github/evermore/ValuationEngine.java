@@ -16,11 +16,11 @@ public class ValuationEngine {
         Loader.loadNativeLibraries();
     }
 
-    private int ARem;
-    private int BRem;
-    private int CRem;
-    private int ERem;
-    private int DRem;
+    public int ARem;
+    public int BRem;
+    public int CRem;
+    public int ERem;
+    public int DRem;
     public List<Politician> remPoliticians;
     public Map<Integer, Integer> expPrices;
 
@@ -53,6 +53,7 @@ public class ValuationEngine {
             DRem -= target.volatilityIndex;
         }
     }
+
     public int getMaximumBid(Politician target, boolean applyVolatilityBuffer, int volatilityBuffer, boolean applyPriceBuffer, double inflationFactor) {
         int SStar = maxScoreIfIgnore(target, applyVolatilityBuffer, volatilityBuffer, applyPriceBuffer, inflationFactor);
         int targetScoreDiff = (SStar < 0) ? 0 : SStar - target.total;
