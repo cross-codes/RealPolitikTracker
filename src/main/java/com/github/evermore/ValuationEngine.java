@@ -54,11 +54,11 @@ public class ValuationEngine {
         }
     }
 
-    public int getMaximumBid(Politician target, boolean applyVolatilityBuffer, int volatilityBuffer, boolean applyPriceBuffer, double inflationFactor) {
-        int SStar = maxScoreIfIgnore(target, applyVolatilityBuffer, volatilityBuffer, applyPriceBuffer, inflationFactor);
+    public int getMaximumBid(Politician target, boolean applyVolatilityBuffer, int volatilityBuffer, boolean applyPriceBuffer, double inflationFactor, int maxExtraRosterSpots) {
+        int SStar = maxScoreIfIgnore(target, applyVolatilityBuffer, volatilityBuffer, applyPriceBuffer, inflationFactor, maxExtraRosterSpots);
         int targetScoreDiff = (SStar < 0) ? 0 : SStar - target.total;
 
-        int CRestStar = minCostIfInclude(target, targetScoreDiff, applyVolatilityBuffer, volatilityBuffer, applyPriceBuffer, inflationFactor);
+        int CRestStar = minCostIfInclude(target, targetScoreDiff, applyVolatilityBuffer, volatilityBuffer, applyPriceBuffer, inflationFactor, maxExtraRosterSpots);
 
         if (CRestStar < 0) return 0;
 
@@ -66,7 +66,7 @@ public class ValuationEngine {
         return Math.max(0, maxBid);
     }
 
-    private int maxScoreIfIgnore(Politician target, boolean applyVolatilityBuffer, int volatilityBuffer, boolean applyPriceBuffer, double inflationFactor) {
+    private int maxScoreIfIgnore(Politician target, boolean applyVolatilityBuffer, int volatilityBuffer, boolean applyPriceBuffer, double inflationFactor, int maxExtraRosterSpots) {
         MPSolver solver = MPSolver.createSolver("SCIP");
         MPVariable[] vars = new MPVariable[remPoliticians.size()];
         MPObjective objective = solver.objective();
@@ -77,7 +77,8 @@ public class ValuationEngine {
         }
 
         MPConstraint ACt = solver.makeConstraint(0, ARem);
-        MPConstraint BCt = solver.makeConstraint(BRem, MPSolver.infinity());
+        MPConstraint BCt = solver.makeConstraint(BRem, BRem + maxExtraRosterSpots);
+
         MPConstraint CCt = solver.makeConstraint(CRem, MPSolver.infinity());
         MPConstraint DCt = solver.makeConstraint(0, VRHS);
         MPConstraint ECt = solver.makeConstraint(ERem, MPSolver.infinity());
@@ -104,7 +105,7 @@ public class ValuationEngine {
         return (status == MPSolver.ResultStatus.OPTIMAL) ? (int) Math.round(objective.value()) : -1;
     }
 
-    private int minCostIfInclude(Politician target, int scoreDiff, boolean applyVolatilityBuffer, int volatilityBuffer, boolean applyPriceBuffer, double inflationFactor) {
+    private int minCostIfInclude(Politician target, int scoreDiff, boolean applyVolatilityBuffer, int volatilityBuffer, boolean applyPriceBuffer, double inflationFactor, int maxExtraRosterSpots) {
         MPSolver solver = MPSolver.createSolver("SCIP");
         MPVariable[] vars = new MPVariable[remPoliticians.size()];
         MPObjective objective = solver.objective();
@@ -115,8 +116,11 @@ public class ValuationEngine {
         }
         if (VRHS < 0) return -1;
 
+        int minRestTeamSize = Math.max(0, BRem - 1);
+
         MPConstraint SCt = solver.makeConstraint(scoreDiff, MPSolver.infinity());
-        MPConstraint ACt = solver.makeConstraint(Math.max(0, BRem - 1), MPSolver.infinity());
+
+        MPConstraint ACt = solver.makeConstraint(minRestTeamSize, minRestTeamSize + maxExtraRosterSpots);
         MPConstraint CCt = solver.makeConstraint(Math.max(0, CRem - (target.isFemale ? 1 : 0)), MPSolver.infinity());
         MPConstraint DCt = solver.makeConstraint(0, VRHS);
         MPConstraint ECt = solver.makeConstraint(Math.max(0, ERem - (target.isIndian ? 1 : 0)), MPSolver.infinity());

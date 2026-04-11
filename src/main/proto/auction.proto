@@ -23,6 +23,7 @@ message BidRequest {
   int32 param2 = 4;
   bool param3 = 5;
   double param4 = 6;
+  int32 param5 = 8;
 }
 
 message BidResponse {

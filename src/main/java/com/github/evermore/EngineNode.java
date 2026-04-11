@@ -19,7 +19,7 @@ import org.apache.kafka.common.TopicPartition;
 public class EngineNode {
     private static volatile double mu = 1.95;
     private static final double alpha = 0.2;
-    private static final String topic = "auction-results-v19";
+    private static final String topic = "auction-results-v5";
 
     static class ValuationServiceImpl extends ValuationServiceGrpc.ValuationServiceImplBase {
         private final ValuationEngine engine;
@@ -31,12 +31,21 @@ public class EngineNode {
         @Override
         public void getMaximumBid(BidRequest request, StreamObserver<BidResponse> responseObserver) {
             IO.println("[gRPC]: Received bid request for: " + request.getPolitician().getName());
+            IO.println("[gRPC]: Bid request has following parameters:");
+            IO.println("[gRPC]: applyVolatilityBuffer: " + request.getParam1());
+            IO.println("[gRPC]: volatilityBuffer: " + request.getParam2());
+            IO.println("[gRPC]: applyPriceBuffer: " + request.getParam3());
+            IO.println("[gRPC]: inflationFactor: " + request.getParam4());
+            IO.println("[gRPC]: maxExtraRosterSpots: " + request.getParam5());
 
             PoliticianMsg msg = request.getPolitician();
             Politician p = new Politician(msg.getId(), msg.getName(), msg.getIsIndian(), msg.getIsFemale(), msg.getVolatilityIndex(), msg.getSpectrum(), msg.getTotal(), msg.getBasePrice());
+            int mxBid = this.engine.getMaximumBid(p, request.getParam1(), request.getParam2(), request.getParam3(), request.getParam4(), request.getParam5());
 
-            int mxBid = this.engine.getMaximumBid(p, request.getParam1(), request.getParam2(), request.getParam3(), request.getParam4());
-            BidResponse response = BidResponse.newBuilder().setRequestId(request.getRequestId()).setMaxBid(mxBid).build();
+            BidResponse response = BidResponse.newBuilder()
+                    .setRequestId(request.getRequestId())
+                    .setMaxBid(mxBid)
+                    .build();
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();

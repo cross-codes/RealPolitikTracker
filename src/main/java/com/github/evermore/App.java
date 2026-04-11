@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class App extends Application {
 
-    private static final String topic = "auction-results-v19";
+    private static final String topic = "auction-results-v5";
     private ManagedChannel grpcChannel;
     private ValuationServiceGrpc.ValuationServiceBlockingStub engineStub;
     private KafkaProducer<String, byte[]> kafkaProducer;
@@ -48,7 +48,13 @@ public class App extends Application {
     private Label bLabel, sLabel, fLabel, vLabel, iLabel;
     private CheckBox cbVolBuffer, cbPriceBuffer;
     private TextField tfVolBuffer, tfPriceBuffer;
+
+    // Spend Projection Labels
     private Label avglabel1, avglabel2, avglabel3, avglabel4;
+    // Volatility Projection Labels
+    private Label avgVolLabel1, avgVolLabel2, avgVolLabel3, avgVolLabel4;
+
+    private Label poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel;
 
     @Override
     public void init() throws Exception {
@@ -112,6 +118,29 @@ public class App extends Application {
 
         engineConfigBox.getChildren().addAll(volBox, priceBox);
 
+        // --- PROJECTION STATS STYLING ---
+        String projRowStyle = "-fx-font-size: 12px;";
+
+        // --- VOLATILITY PROJECTION BOX ---
+        VBox volProjectionBox = new VBox(5);
+        volProjectionBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label volProjTitle = new Label("Avg vol per slot to reach:");
+        volProjTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #4b5563;");
+
+        avgVolLabel1 = new Label();
+        avgVolLabel2 = new Label();
+        avgVolLabel3 = new Label();
+        avgVolLabel4 = new Label();
+
+        avgVolLabel1.setStyle(projRowStyle);
+        avgVolLabel2.setStyle(projRowStyle);
+        avgVolLabel3.setStyle(projRowStyle);
+        avgVolLabel4.setStyle(projRowStyle);
+
+        volProjectionBox.getChildren().addAll(volProjTitle, avgVolLabel1, avgVolLabel2, avgVolLabel3, avgVolLabel4);
+
+        // --- SPEND PROJECTION BOX ---
         VBox projectionBox = new VBox(5);
         projectionBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -123,20 +152,43 @@ public class App extends Application {
         avglabel3 = new Label();
         avglabel4 = new Label();
 
-        String projRowStyle = "-fx-font-size: 12px;";
         avglabel1.setStyle(projRowStyle);
         avglabel2.setStyle(projRowStyle);
         avglabel3.setStyle(projRowStyle);
         avglabel4.setStyle(projRowStyle);
 
         projectionBox.getChildren().addAll(projTitle, avglabel1, avglabel2, avglabel3, avglabel4);
+
+        // --- POOL STATS BOX ---
+        VBox poolStatsBox = new VBox(5);
+        poolStatsBox.setAlignment(Pos.CENTER_LEFT);
+        Label poolStatsTitle = new Label("Remaining Pool:");
+        poolStatsTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #4b5563;");
+
+        poolAvgPriceLabel = new Label();
+        poolAvgVolLabel = new Label();
+        poolFemalesLabel = new Label();
+        poolIndiansLabel = new Label();
+
+        String poolStatStyle = "-fx-font-size: 12px; -fx-text-fill: #374151;";
+        poolAvgPriceLabel.setStyle(poolStatStyle);
+        poolAvgVolLabel.setStyle(poolStatStyle);
+        poolFemalesLabel.setStyle(poolStatStyle);
+        poolIndiansLabel.setStyle(poolStatStyle);
+
+        poolStatsBox.getChildren().addAll(poolStatsTitle, poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel);
+
+        // Initialize the stats
+        updatePoolStats();
         updateStats();
 
         HBox headerRow = new HBox(20);
         headerRow.setAlignment(Pos.CENTER_LEFT);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        headerRow.getChildren().addAll(statsBox, spacer, engineConfigBox, new Separator(Orientation.VERTICAL), projectionBox);
+
+        // Volatility projection added to the left of the spend projection
+        headerRow.getChildren().addAll(statsBox, spacer, engineConfigBox, new Separator(Orientation.VERTICAL), poolStatsBox, new Separator(Orientation.VERTICAL), volProjectionBox, new Separator(Orientation.VERTICAL), projectionBox);
 
         TextField searchField = new TextField();
         searchField.setPromptText("Search politician by name...");
@@ -249,6 +301,36 @@ public class App extends Application {
         stage.show();
     }
 
+    private void updatePoolStats() {
+        if (polPool == null || polPool.isEmpty()) {
+            poolAvgPriceLabel.setText("ABP: N/A");
+            poolAvgVolLabel.setText("AVV: N/A");
+            poolFemalesLabel.setText("FEM: 0");
+            poolIndiansLabel.setText("IND: 0");
+            return;
+        }
+
+        int totalBasePrice = 0;
+        int totalVol = 0;
+        int femaleCount = 0;
+        int indianCount = 0;
+
+        for (Politician p : polPool) {
+            totalBasePrice += p.basePrice;
+            totalVol += p.volatilityIndex;
+            if (p.isFemale) femaleCount++;
+            if (p.isIndian) indianCount++;
+        }
+
+        double avgPrice = (double) totalBasePrice / polPool.size();
+        double avgVol = (double) totalVol / polPool.size();
+
+        poolAvgPriceLabel.setText(String.format("ABP: %.1f", avgPrice));
+        poolAvgVolLabel.setText(String.format("AVV: %.1f", avgVol));
+        poolFemalesLabel.setText("FEM: " + femaleCount);
+        poolIndiansLabel.setText("IND: " + indianCount);
+    }
+
     private void updateStats() {
         int curSpent = 0;
         int curVol = 0;
@@ -257,17 +339,17 @@ public class App extends Application {
         int curSize = currTeamData.size();
 
         for (Politician p : currTeamData) {
-            curSpent += p.basePrice; // This was updated if we bought it
+            curSpent += p.basePrice;
             curVol += p.volatilityIndex;
             if (p.isFemale) curFemales++;
             if (p.isIndian) curIndians++;
         }
 
-        bLabel.setText(String.format("Amount Spent: %d / %d", curSpent, budgetA));
-        sLabel.setText(String.format("Team Size: %d / %d", curSize, sizeB));
-        fLabel.setText(String.format("Females: %d / %d", curFemales, femalesC));
-        vLabel.setText(String.format("Volatility: %d / %d", curVol, volD));
-        iLabel.setText(String.format("Indians: %d / %d", curIndians, indiansE));
+        bLabel.setText(String.format("AMT: %d / %d", curSpent, budgetA));
+        sLabel.setText(String.format("TSZ: %d / %d", curSize, sizeB));
+        fLabel.setText(String.format("FEM: %d / %d", curFemales, femalesC));
+        vLabel.setText(String.format("VOL: %d / %d", curVol, volD));
+        iLabel.setText(String.format("IND: %d / %d", curIndians, indiansE));
 
         String baseStyle = "-fx-padding: 5 10; -fx-background-radius: 5; -fx-font-weight: bold; ";
         String greenStyle = baseStyle + "-fx-background-color: #a7f3d0; -fx-text-fill: #065f46;";
@@ -280,19 +362,28 @@ public class App extends Application {
         fLabel.setStyle(curFemales >= femalesC ? greenStyle : redStyle);
         iLabel.setStyle(curIndians >= indiansE ? greenStyle : redStyle);
 
+        // Update Spend Projections
         int budgetLeft = budgetA - curSpent;
         updateProjectionLabel(avglabel1, sizeB, curSize, budgetLeft);
         updateProjectionLabel(avglabel2, sizeB + 1, curSize, budgetLeft);
         updateProjectionLabel(avglabel3, sizeB + 2, curSize, budgetLeft);
         updateProjectionLabel(avglabel4, sizeB + 3, curSize, budgetLeft);
+
+        // Update Volatility Projections
+        int volLeft = volD - curVol;
+        updateProjectionLabel(avgVolLabel1, sizeB, curSize, volLeft);
+        updateProjectionLabel(avgVolLabel2, sizeB + 1, curSize, volLeft);
+        updateProjectionLabel(avgVolLabel3, sizeB + 2, curSize, volLeft);
+        updateProjectionLabel(avgVolLabel4, sizeB + 3, curSize, volLeft);
     }
 
-    private void updateProjectionLabel(Label lbl, int targetSize, int curSize, int budgetLeft) {
+    // Renamed resourceLeft to make it clear this handles both budget and volatility math
+    private void updateProjectionLabel(Label lbl, int targetSize, int curSize, int resourceLeft) {
         if (curSize >= targetSize) {
             lbl.setText(String.format("Size %d: Met", targetSize));
             lbl.setStyle("-fx-font-size: 12px; -fx-text-fill: #065f46; -fx-font-weight: bold;");
         } else {
-            double avg = (double) budgetLeft / (targetSize - curSize);
+            double avg = (double) resourceLeft / (targetSize - curSize);
             lbl.setText(String.format("Size %d: %.1f / slot", targetSize, avg));
             lbl.setStyle("-fx-font-size: 12px; -fx-text-fill: #374151;");
         }
@@ -311,8 +402,18 @@ public class App extends Application {
         nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
         Label basePriceLabel = new Label("Base Price: " + politician.basePrice);
-        Label maxBidLabel = new Label("Querying Engine for Max Bid...");
-        maxBidLabel.setStyle("-fx-text-fill: blue; -fx-font-weight: bold;");
+
+        Label cap0Label = new Label("Cap +0 (Strict): Querying...");
+        cap0Label.setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: bold; -fx-font-size: 13px;"); // Red
+
+        Label cap1Label = new Label("Cap +1 (Moderate): Querying...");
+        cap1Label.setStyle("-fx-text-fill: #f57c00; -fx-font-weight: bold; -fx-font-size: 13px;"); // Orange
+
+        Label cap2Label = new Label("Cap +2 (Flexible): Querying...");
+        cap2Label.setStyle("-fx-text-fill: #388e3c; -fx-font-weight: bold; -fx-font-size: 13px;"); // Green
+
+        VBox limitsBox = new VBox(5, cap0Label, cap1Label, cap2Label);
+        limitsBox.setStyle("-fx-background-color: #f3f4f6; -fx-padding: 10; -fx-border-color: #d1d5db; -fx-border-radius: 5; -fx-background-radius: 5;");
 
         boolean applyVol = cbVolBuffer.isSelected();
         int[] volBuf = {0};
@@ -337,12 +438,30 @@ public class App extends Application {
         new Thread(() -> {
             try {
                 PoliticianMsg msg = toProto(politician);
-                BidRequest request = BidRequest.newBuilder().setRequestId(UUID.randomUUID().toString()).setPolitician(msg).setParam1(applyVol).setParam2(volBuf[0]).setParam3(applyPrice).setParam4(infFactor[0]).build();
 
-                BidResponse response = engineStub.getMaximumBid(request);
-                Platform.runLater(() -> maxBidLabel.setText("Recommended maximum bid: " + response.getMaxBid()));
+                BidRequest.Builder reqBuilder = BidRequest.newBuilder()
+                        .setRequestId(UUID.randomUUID().toString())
+                        .setPolitician(msg)
+                        .setParam1(applyVol)
+                        .setParam2(volBuf[0])
+                        .setParam3(applyPrice)
+                        .setParam4(infFactor[0]);
+
+                BidResponse resp0 = engineStub.getMaximumBid(reqBuilder.setParam5(0).build());
+                BidResponse resp1 = engineStub.getMaximumBid(reqBuilder.setParam5(1).build());
+                BidResponse resp2 = engineStub.getMaximumBid(reqBuilder.setParam5(2).build());
+
+                Platform.runLater(() -> {
+                    cap0Label.setText("Cap +0 (Strict): " + resp0.getMaxBid());
+                    cap1Label.setText("Cap +1 (Moderate): " + resp1.getMaxBid());
+                    cap2Label.setText("Cap +2 (Flexible): " + resp2.getMaxBid());
+                });
             } catch (Exception e) {
-                Platform.runLater(() -> maxBidLabel.setText("Error querying Engine!"));
+                Platform.runLater(() -> {
+                    cap0Label.setText("Error querying Engine!");
+                    cap1Label.setText("");
+                    cap2Label.setText("");
+                });
                 e.printStackTrace();
             }
         }).start();
@@ -381,6 +500,7 @@ public class App extends Application {
             try {
                 int soldPrice = Integer.parseInt(priceField.getText().trim());
                 boolean weBoughtIt = rbWeBought.isSelected();
+                broadcastAuctionResult(politician, weBoughtIt, soldPrice);
 
                 if (weBoughtIt) {
                     politician.basePrice = soldPrice;
@@ -393,7 +513,8 @@ public class App extends Application {
                     currTeamData.add(politician);
                 }
 
-                broadcastAuctionResult(politician, weBoughtIt, soldPrice);
+                updatePoolStats(); // Update the pool stats after someone is removed
+
                 dialog.close();
 
             } catch (NumberFormatException ex) {
@@ -403,9 +524,9 @@ public class App extends Application {
             }
         });
 
-        layout.getChildren().addAll(nameLabel, basePriceLabel, maxBidLabel, sep, new Label("Auction Outcome:"), rbWeBought, rbTheyBought, rbUnsold, priceBox, submitBtn);
+        layout.getChildren().addAll(nameLabel, basePriceLabel, limitsBox, sep, new Label("Auction Outcome:"), rbWeBought, rbTheyBought, rbUnsold, priceBox, submitBtn);
 
-        Scene scene = new Scene(layout, 350, 380);
+        Scene scene = new Scene(layout, 400, 480);
         dialog.setScene(scene);
         dialog.showAndWait();
     }
