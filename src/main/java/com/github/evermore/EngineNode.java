@@ -19,7 +19,7 @@ import org.apache.kafka.common.TopicPartition;
 public class EngineNode {
     private static volatile double mu = 1.95;
     private static final double alpha = 0.2;
-    private static final String topic = "auction-results-v9";
+    private static final String topic = "auction-results-v10";
 
     static class ValuationServiceImpl extends ValuationServiceGrpc.ValuationServiceImplBase {
         private final ValuationEngine engine;

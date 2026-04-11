@@ -37,7 +37,7 @@ import java.util.UUID;
 
 public class App extends Application {
 
-    private static final String topic = "auction-results-v9";
+    private static final String topic = "auction-results-v10";
     private ManagedChannel grpcChannel;
     private ValuationServiceGrpc.ValuationServiceBlockingStub engineStub;
     private KafkaProducer<String, byte[]> kafkaProducer;
@@ -56,7 +56,7 @@ public class App extends Application {
     private Label avglabel1, avglabel2, avglabel3, avglabel4;
     private Label avgVolLabel1, avgVolLabel2, avgVolLabel3, avgVolLabel4;
 
-    private Label poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel;
+    private Label poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel, poolRemLabel;
 
     @Override
     public void init() throws Exception {
@@ -166,14 +166,16 @@ public class App extends Application {
         poolAvgVolLabel = new Label();
         poolFemalesLabel = new Label();
         poolIndiansLabel = new Label();
+        poolRemLabel = new Label();
 
         String poolStatStyle = "-fx-font-size: 12px; -fx-text-fill: #374151;";
         poolAvgPriceLabel.setStyle(poolStatStyle);
         poolAvgVolLabel.setStyle(poolStatStyle);
         poolFemalesLabel.setStyle(poolStatStyle);
         poolIndiansLabel.setStyle(poolStatStyle);
+        poolRemLabel.setStyle(poolStatStyle);
 
-        poolStatsBox.getChildren().addAll(poolStatsTitle, poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel);
+        poolStatsBox.getChildren().addAll(poolStatsTitle, poolAvgPriceLabel, poolAvgVolLabel, poolFemalesLabel, poolIndiansLabel, poolRemLabel);
         updatePoolStats();
         updateStats();
 
@@ -313,6 +315,7 @@ public class App extends Application {
             poolAvgVolLabel.setText("AVV: N/A");
             poolFemalesLabel.setText("FEM: 0");
             poolIndiansLabel.setText("IND: 0");
+            poolRemLabel.setText("REM: 0");
             return;
         }
 
@@ -335,6 +338,7 @@ public class App extends Application {
         poolAvgVolLabel.setText(String.format("AVV: %.1f", avgVol));
         poolFemalesLabel.setText("FEM: " + femaleCount);
         poolIndiansLabel.setText("IND: " + indianCount);
+        poolRemLabel.setText("REM: " + polPool.size());
     }
 
     private void updateStats() {
@@ -537,10 +541,10 @@ public class App extends Application {
 
     private void addToFile(Politician p) {
         File csvFile = new File("bought_roster.csv");
-        boolean isNewFile = !csvFile.exists();
+        boolean dne = !csvFile.exists();
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(csvFile, true))) {
-            if (isNewFile) {
+            if (dne) {
                 pw.println("Sl. No.,Leaders,Nationaity,Gender,Mass Appeal,Political Tact,Volitality Index,Spectrum,Total,Base Price");
             }
             String nationality = p.isIndian ? "Indian" : "Overseas";
